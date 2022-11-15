@@ -4,22 +4,51 @@ import { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { Fragment } from 'react';
 import Edit from './Edit';
+import Create from './Create';
 import 'bootstrap/dist/css/bootstrap.css';
 
-var selection = [];
+var selectionEdit = [];
+var selectionCreate = [];
 
 export default function HomeIndex(props) {
   var idx = props.data[0];
   var id = props.data[1];
   var player = props.data[2];
-  var setPlayer = props.data[3];
-  var players = props.data[4];
-  var setPlayers = props.data[5];
-  const [show, setShow] = useState(props.data[6]);
+  var players = props.data[3];
+  const [showEdit, setShowEdit] = useState(() => props.data[4]);
+  const [showCreate, setShowCreate] = useState(() => props.data[5]);
+  var putData = props.data[6];
+  var postData = props.data[7];
+
+  var getShowEdit = () => {
+    return showEdit;
+  }
+
+  var getShowCreate = () => {
+    return showCreate;
+  };
   // console.log(props);
 
   return (
     <div>
+      <div className="d-flex align-items-center justify-content-left">
+        <Button
+        onClick={(e) => {
+          e.preventDefault();
+          setShowCreate(true);
+          selectionCreate = [
+            player,
+            players,
+            setShowCreate,
+            getShowCreate,
+            postData,
+          ];
+        }}
+        >
+          <h5>Create</h5>
+        </Button>
+      </div>
+
       <table>
         <tbody>
           {players.map((item, ix) => {
@@ -37,20 +66,17 @@ export default function HomeIndex(props) {
                       <Button
                         onClick={(e) => {
                           e.preventDefault();
-                          setShow(true);
+                          setShowEdit(true);
                           idx = ix;
                           id = item.id;
-                          selection = [
+                          selectionEdit = [
                             idx,
                             id,
                             player,
-                            setPlayer,
                             players,
-                            setPlayers,
-                            setShow,
-                            (show) => {
-                              return show;
-                            },
+                            setShowEdit,
+                            getShowEdit,
+                            postData,
                           ];
                           // console.log(selection);
                         }}
@@ -66,7 +92,8 @@ export default function HomeIndex(props) {
         </tbody>
       </table>
       <div>
-        <Edit show={show} data={selection} />
+        <Edit show={showEdit} data={selectionEdit} />
+        <Create show={showCreate} data={selectionCreate} />
       </div>
     </div>
   );

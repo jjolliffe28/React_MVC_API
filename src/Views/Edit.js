@@ -6,18 +6,16 @@ import 'bootstrap/dist/css/bootstrap.css';
 var name = null;
 var team = null;
 var position = null;
-var totalYards = null;
-var totalTouchdowns = null;
+var totalYards = 0;
+var totalTouchdowns = 0;
 
 var idx = null;
 var id = null;
 
 var player = {};
-var setPlayer = null;
 var players = [];
-var setPlayers = null;
-var setShow = null;
-var getShow = null;
+var setShowEdit = null;
+var getShowEdit = null;
 var putdata = null;
 
 
@@ -61,10 +59,10 @@ const EditForm = ({ onSubmit }) => {
         <Form.Label>Total Yards</Form.Label>
         <Form.Control
           autoComplete="totalYards"
-          type="int"
+          type="text"
           placeholder={players[idx].totalYards}
           defaultValue={players[idx].totalYards}
-          onChange={(e) => (position = e.target.value)}
+          onChange={(e) => (totalYards = e.target.value)}
         />
       </Form.Group>
 
@@ -72,10 +70,10 @@ const EditForm = ({ onSubmit }) => {
         <Form.Label>Total Touchdowns</Form.Label>
         <Form.Control
           autoComplete="totalTouchdowns"
-          type="int"
+          type="text"
           placeholder={players[idx].totalTouchdowns}
           defaultValue={players[idx].totalTouchdowns}
-          onChange={(e) => (position = e.target.value)}
+          onChange={(e) => (totalTouchdowns = e.target.value)}
         />
       </Form.Group>
 
@@ -94,30 +92,41 @@ export default function Edit(props) {
   idx = props.data[0];
   id = props.data[1];
   player = props.data[2];
-  setPlayer = props.data[3];
-  players = props.data[4];
-  setPlayers = props.data[5];
-  setShow = props.data[6];
-  getShow = props.data[7];
-  putdata = props.data[8];
+  players = props.data[3];
+  setShowEdit = props.data[4];
+  getShowEdit = props.data[5];
+  putdata = props.data[6];
 
   // console.log(props);
 
   var handleClose = () => {
-    setShow(false);
+    setShowEdit(false);
     return;
   };
 
   const onEditFormSubmit = (e) => {
     e.preventDefault();
-    setShow(false);
+    setShowEdit(false);
 
-    if (name !== null) players[idx].name = name;
-    if (team !== null) players[idx].team = team;
-    if (position !== null)
+    if (name !== null) {
+      players[idx].name = name;
+    }
+
+    if (team !== null) {
+      players[idx].team = team;
+    }
+
+    if (position !== null) {
       players[idx].position = position;
-    if (totalYards !== null) players[idx].totalYards = totalYards;
-    if (totalTouchdowns !== null) players[idx].totalTouchdowns = totalTouchdowns;
+    }
+
+    if (totalYards !== null) {
+      players[idx].totalYards = totalYards;
+    }
+
+    if (totalTouchdowns !== null) {
+      players[idx].totalTouchdowns = totalTouchdowns;
+    }
     // console.log(name, team, position);
 
     name = null;
@@ -126,15 +135,17 @@ export default function Edit(props) {
     totalYards = null;
     totalTouchdowns = null;
 
+    putdata(players[idx], id);
+
     return;
   };
 
   return (
     <div>
       {/* <h1>{players[idx].name}</h1> */}
-      <Modal id="myModal" show={getShow} onClose={handleClose}>
+      <Modal id="editModal" show={getShowEdit} onClose={handleClose}>
         <Modal.Header>
-          <Modal.name>Edit</Modal.name>
+          <Modal.Title>Edit</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <EditForm onSubmit={onEditFormSubmit} />
